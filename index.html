@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Detection Application</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body{
+            overflow: hidden;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.753), rgba(0, 0, 0, 0.715)), url('./bg.jpeg');
+            height: 100vh;
+            width: 100%;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+        .main_box{
+            padding: 30px;
+            width: 40%;
+            background-color: rgba(0, 0, 0, 0.507);
+            box-shadow: 0 0 5px 0 rgba(255, 0, 0, 0.671);
+        }
+        form{
+            display: flex;
+        }
+        form input, button{
+            background-color: black;
+            padding: 10px;
+            width: 80%;
+            border: 1px solid rgba(3, 212, 3, 0.267);
+            color: wheat;
+            margin: 3px;
+        }
+        form button{
+            width: 20%;
+            background-color: green;
+            margin: 3px;
+            border:none;
+            cursor: pointer;
+        }
+        .info_box{
+            overflow: hidden;
+            text-align: center;
+            color: white;
+        }
+        .info_box img{
+            height: 200px;
+            width: 200px;
+        }
+        @media only screen and (min-width:200px) and (max-width:991px) {
+            .main_box{
+                width: 98%;
+            }
+        }
+        @media only screen and (min-width:200px) and (max-width:386px) {
+            form{
+                display: inline-block;
+                width: 100% !important;
+            }
+            input, button{
+                width: 98% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main_box">
+        <form action="#">
+            <input required type="text" id="putname" name="name" placeholder="Please Inter Your Name">
+            <button onclick="clickbtnfun()" id="submitbtn">Analysis</button>
+        </form>
+        <div class="info_box">
+            
+            <p id="nameis"></p>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        const formselcet = document.querySelector('form');
+        const btnselcet = document.querySelector('#putname');
+        const btnclick = document.querySelector('#submitbtn');
+
+        formselcet.onsubmit=(e)=>{
+            e.preventDefault();
+        }
+        var name='';
+        var obj='';
+        if(name==''){
+            btnclick.style.display='none';
+        }
+        btnselcet.oninput=()=>{
+            name = document.getElementById('putname').value;
+            if(name !=''){
+                btnclick.style.display='block';
+            }else{
+                btnclick.style.display='none';
+            }
+        }
+
+        async function clickbtnfun(){
+                var htpr = new XMLHttpRequest();
+                document.getElementById('nameis').innerHTML='<img src="./cool_loading.gif" alt="">';
+                await htpr.open('GET','https://api.agify.io/?name='+name,true);
+                htpr.send();
+                htpr.onreadystatechange= async function(){
+                    if(htpr.readyState==4 && htpr.status==200){
+                        console.log(htpr.status);
+                        var data = await htpr.response;
+                        obj = await JSON.parse(data);
+                        document.getElementById('nameis').innerHTML='<p style="color:green">'+obj.name+'- Your Age</p><br><h1>'+obj.age+"</h1>";
+                        // console.log(obj.age);
+                        btnselcet.value='';
+                    }
+                    if(htpr.status==''){
+                        document.getElementById('nameis').innerHTML='<p style="color:red; margin-top:30px;">Please Check your Internet Connection</p>';
+                    }
+                    if(obj.age==null){
+                        document.getElementById('nameis').innerHTML='<p style="color:yellow; margin-top:30px;">Please put your valid nickname only</p>';
+                    }
+                }
+                }
+            
+
+        
+
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
